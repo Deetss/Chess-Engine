@@ -1,10 +1,25 @@
 extends ../layouts/default.pug
 
 block page-header
-  h2 Todo
+  h2 Play Chess
+  span This is a very basic chess AI created by Deetss. 
+  span Still a work in progress
 
 block content
   #board.board
   br
   .info
+    span Search depth 
+    select#search-depth
+        each val in [1,2,3,4]
+          option= val
+
+    <br>
+    <span>Positions evaluated: <span id="position-count"></span></span>
+    <br>
+    <span>Time: <span id="time"></span></span>
+    <br>
+    <span>Positions/s: <span id="positions-per-s"></span> </span>
+    <br>
+    <br>
     #move-history.move-history

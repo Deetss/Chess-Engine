@@ -1,16 +1,16 @@
 {
-  "name": "node-express-mongoose",
-  "description": "A boilerplate application for node, mongo",
+  "name": "Deetss-Chess",
+  "description": "Chess Engine",
   "version": "1.0.0",
   "author": {
-    "name": "Madhusudhan Srinivasa",
-    "email": "me@madhums.me"
+    "name": "Deetss",
+    "email": "dylan.deetss@gmial.com"
   },
   "engines": {
     "node": ">=10.x"
   },
   "scripts": {
-    "start": "browserify ./public/js/app.js > ./public/js/bundle.js; cross-env NODE_ENV=development nodemon server.js",
+    "start": "cross-env NODE_ENV=production nodemon server.js",
     "test": "cross-env NODE_ENV=test babel-tape-runner test/test-*.js",
     "pretest": "eslint .",
     "prod": "pm2-runtime start ecosystem.config.js --env production"
@@ -55,7 +55,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/madhums/node-express-mongoose.git"
+    "url": "git://github.com/Deetss/Chess-Engine"
   },
   "keywords": [
     "node",
