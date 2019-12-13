@@ -316,6 +316,6 @@ window.onload = function() {
         onMouseoverSquare: onMouseoverSquare,
         onSnapEnd: onSnapEnd
     };
-
+test
     board = ChessBoard('board', cfg);
 };
