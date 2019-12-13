@@ -4,3 +4,10 @@
 body {
   padding-top: 6rem;
 }
+
+.board {
+  width: 60%;
+  height: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
