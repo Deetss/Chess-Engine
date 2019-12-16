@@ -34,10 +34,10 @@ block content
 
             function disconnect(){
               $.get("/disconnect", function(){
-                EventSource.close();
                 $("#dc").css("color", "red");
               })
             }
+
             source.addEventListener('message', function(e) {
               var connections = JSON.parse(e.data)
               console.log(connections)
@@ -50,6 +50,13 @@ block content
               $("#dc").show();
             }, false)
 
+            source.addEventListener('disconnect', function(e) {
+              EventSource.close();
+              $("#state").text("Disconnected")
+              $("#connect").show()
+              $("#dc").hide();
+            }, false)
+
             source.addEventListener('error', function(e) {
               if (e.target.readyState == EventSource.CLOSED) {
                 $("#state").text("Disconnected")
@@ -57,7 +64,7 @@ block content
                 $("#connect").show();
               }
               else if (e.target.readyState == EventSource.CONNECTING) {
-                $("#connect").hide();
+                $("#connect").show();
                 $("#state").text("Connecting...")
               }
             }, false)

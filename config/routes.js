@@ -1,40 +1,43 @@
+/* eslint-disable no-undef */
 'use strict';
 
 /**
  * Module dependencies.
  */
 
-
 const home = require('../app/controllers/home');
 
 /**
  * Expose
  */
+var connections = [];
 
 module.exports = function(app) {
-  app.get('/stream', function (req, res) {
-    res.sseSetup()
-    res.sseSend(connections.length)
-    connections.push(res)
-  })
+  app.get('/stream', function(req, res) {
+    res.sseSetup();
+    connections.push(res);
+    res.sseSend(connections.length);
+  });
 
-  app.get("/connect", function(req, res){
-    for(var i = 0; i < connections.length; i++){
-      connections[i].sseSend(connections.length)
-    }
-    res.sendStatus(200)
-  })
-  app.get("/disconnect", function (req, res) {
+  app.get('/connect', function(req, res) {
     for (var i = 0; i < connections.length; i++) {
-      console.log(connections[i].req.sessionID)
-      console.log(req.sessionID)
-      if (connections[i].req.sessionID == req.sessionID){
-        connections[i].sseEnd();
-        connections = connections.filter(function (connection) { return connection != null; }); 
-      }
+      connections[i].sseSend(connections.length);
     }
-    res.sendStatus(200)
-  })
+    res.sendStatus(200);
+  });
+
+  app.get('/disconnect', function(req, res) {
+    for (var i = 0; i < connections.length; i++) {
+      var target =
+        connections[i].req.sessionID == req.sessionID ? connections[i] : null;
+      if (target != null) {
+        var index = connections.indexOf(target);
+        connections.splice(index, 1);
+      }
+      target.sseSend(connections.length, 'disconnect');
+    }
+    res.sendStatus(200);
+  });
 
   app.get('/', home.index);
 
