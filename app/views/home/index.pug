@@ -17,44 +17,54 @@ block content
     <br>
     <span>Positions evaluated: <span id="position-count"></span></span>
     <br>
-    #connect(onclick="test()") connect
-    a(href="")
-      #dc disconnect
+    #connect(onclick="connect()") connect
+    #dc(onclick="disconnect()") disconnect
     p#connections connections:
     div(id="state") Disconnected
-    script. 
-      function test(){
-        $.get("/test", function(){
-          $("#connect").css("color", "red");
-        })
-
-      }
-
     script.
       if (!!window.EventSource) {
-        var source = new EventSource('/stream')
+            const source = new EventSource('/stream')
 
-        source.addEventListener('message', function(e) {
-          var connections = JSON.parse(e.data)
-          console.log(connections)
-          $("#connections").text("connections:" + e.data )
-        }, false)
+            function connect(){
+              $.get("/connect", function(){
+                $("#connect").css("color", "green");
+              });
 
-        source.addEventListener('open', function(e) {
-          $("#state").text("Connected")
-        }, false)
+            }
 
-        source.addEventListener('error', function(e) {
-          if (e.target.readyState == EventSource.CLOSED) {
-            $("#state").text("Disconnected")
+            function disconnect(){
+              $.get("/disconnect", function(){
+                EventSource.close();
+                $("#dc").css("color", "red");
+              })
+            }
+            source.addEventListener('message', function(e) {
+              var connections = JSON.parse(e.data)
+              console.log(connections)
+              $("#connections").text("connections:" + e.data )
+            }, false)
+
+            source.addEventListener('open', function(e) {
+              $("#state").text("Connected")
+              $("#connect").hide()
+              $("#dc").show();
+            }, false)
+
+            source.addEventListener('error', function(e) {
+              if (e.target.readyState == EventSource.CLOSED) {
+                $("#state").text("Disconnected")
+                $("#dc").hide();
+                $("#connect").show();
+              }
+              else if (e.target.readyState == EventSource.CONNECTING) {
+                $("#connect").hide();
+                $("#state").text("Connecting...")
+              }
+            }, false)
+          } else {
+            console.log("Your browser doesn't support SSE")
           }
-          else if (e.target.readyState == EventSource.CONNECTING) {
-            $("#state").text("Connecting...")
-          }
-        }, false)
-      } else {
-        console.log("Your browser doesn't support SSE")
-      }
+      
     <span>Time: <span id="time"></span></span>
     <br>
     <span>Positions/s: <span id="positions-per-s"></span> </span>

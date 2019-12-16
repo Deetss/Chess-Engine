@@ -14,14 +14,24 @@ const home = require('../app/controllers/home');
 module.exports = function(app) {
   app.get('/stream', function (req, res) {
     res.sseSetup()
-    res.sseSend(JSON.stringify("test"))
-
+    res.sseSend(connections.length)
     connections.push(res)
   })
 
-  app.get("/test", function(req, res){
+  app.get("/connect", function(req, res){
     for(var i = 0; i < connections.length; i++){
-      connections[i].sseSend("test")
+      connections[i].sseSend(connections.length)
+    }
+    res.sendStatus(200)
+  })
+  app.get("/disconnect", function (req, res) {
+    for (var i = 0; i < connections.length; i++) {
+      console.log(connections[i].req.sessionID)
+      console.log(req.sessionID)
+      if (connections[i].req.sessionID == req.sessionID){
+        connections[i].sseEnd();
+        connections = connections.filter(function (connection) { return connection != null; }); 
+      }
     }
     res.sendStatus(200)
   })
