@@ -11,6 +11,10 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const csrf = require('csurf');
 const helmet = require('helmet');
+connections = [];
+
+
+const sse = require('../app/middleware/sse');
 
 const mongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
@@ -118,4 +122,6 @@ module.exports = function(app, passport) {
       next();
     });
   }
+
+  app.use(sse);
 };

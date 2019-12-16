@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+
 const home = require('../app/controllers/home');
 
 /**
@@ -11,6 +12,20 @@ const home = require('../app/controllers/home');
  */
 
 module.exports = function(app) {
+  app.get('/stream', function (req, res) {
+    res.sseSetup()
+    res.sseSend(JSON.stringify("test"))
+
+    connections.push(res)
+  })
+
+  app.get("/test", function(req, res){
+    for(var i = 0; i < connections.length; i++){
+      connections[i].sseSend("test")
+    }
+    res.sendStatus(200)
+  })
+
   app.get('/', home.index);
 
   /**
