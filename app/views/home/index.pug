@@ -17,60 +17,10 @@ block content
     <br>
     <span>Positions evaluated: <span id="position-count"></span></span>
     <br>
-    #connect(onclick="connect()") connect
-    #dc(onclick="disconnect()") disconnect
+    #connect connect
+    #dc disconnect
     p#connections connections:
     div(id="state") Disconnected
-    script.
-      if (!!window.EventSource) {
-            const source = new EventSource('/stream')
-
-            function connect(){
-              $.get("/connect", function(){
-                $("#connect").css("color", "green");
-              });
-
-            }
-
-            function disconnect(){
-              $.get("/disconnect", function(){
-                $("#dc").css("color", "red");
-              })
-            }
-
-            source.addEventListener('message', function(e) {
-              var connections = JSON.parse(e.data)
-              console.log(connections)
-              $("#connections").text("connections:" + e.data )
-            }, false)
-
-            source.addEventListener('open', function(e) {
-              $("#state").text("Connected")
-              $("#connect").hide()
-              $("#dc").show();
-            }, false)
-
-            source.addEventListener('disconnect', function(e) {
-              EventSource.close();
-              $("#state").text("Disconnected")
-              $("#connect").show()
-              $("#dc").hide();
-            }, false)
-
-            source.addEventListener('error', function(e) {
-              if (e.target.readyState == EventSource.CLOSED) {
-                $("#state").text("Disconnected")
-                $("#dc").hide();
-                $("#connect").show();
-              }
-              else if (e.target.readyState == EventSource.CONNECTING) {
-                $("#connect").show();
-                $("#state").text("Connecting...")
-              }
-            }, false)
-          } else {
-            console.log("Your browser doesn't support SSE")
-          }
       
     <span>Time: <span id="time"></span></span>
     <br>

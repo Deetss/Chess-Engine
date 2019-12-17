@@ -307,6 +307,72 @@ window.onload = function() {
         squareEl.css('background', background);
     };
 
+
+    let source;
+
+    var attachStreamListeners = function(){
+        source.addEventListener('message', function(e) {
+            var connections = JSON.parse(e.data)
+            console.log(connections)
+            $("#connections").text("connections:" + connections )
+          }, false)
+  
+          source.addEventListener('open', function(e) {
+            $("#state").text("Connected")
+            $("#connect").hide()
+            $("#dc").show();
+          }, false)
+  
+          source.addEventListener('disconnect', function(e) {
+            $("#connections").text("connections:" + connections )
+          }, false)
+  
+          source.addEventListener('error', function(e) {
+            if (e.target.readyState == EventSource.CLOSED) {
+              $("#state").text("Disconnected")
+              $("#dc").hide();
+              $("#connect").show();
+            }
+            else if (e.target.readyState == EventSource.CONNECTING) {
+              $("#connect").show();
+              $("#state").text("Connecting...")
+            }
+          }, false)
+    }
+
+    var connect = function (){
+      $.get("/connect", function(){
+        source = new EventSource('/stream');
+        attachStreamListeners();
+        $("#connect").css("color", "green");
+      });
+
+    }
+
+    var disconnect = function(){
+      $.get("/disconnect", function(){
+        source.close()
+        if (source.readyState == EventSource.CLOSED) {
+            $("#state").text("Disconnected")
+            $("#dc").hide();
+            $("#connect").show();
+          }
+      })
+    }
+
+    if (!!window.EventSource) {
+
+        $("#connect").on("click", function(){
+            connect();
+        })
+
+        $("#dc").on("click", function(){
+            disconnect();
+        })
+      } else {
+        console.log("Your browser doesn't support SSE")
+      }
+
     var cfg = {
         draggable: true,
         position: 'start',
@@ -317,4 +383,5 @@ window.onload = function() {
         onSnapEnd: onSnapEnd
     };
     board = ChessBoard('board', cfg);
+
 };

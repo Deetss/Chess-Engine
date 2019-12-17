@@ -36,7 +36,7 @@ module.exports = function(app) {
       }
       target.sseSend(connections.length, 'disconnect');
     }
-    res.sendStatus(200);
+    res.sendStatus(204);
   });
 
   app.get('/', home.index);
