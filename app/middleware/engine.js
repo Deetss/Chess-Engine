@@ -64,6 +64,7 @@ const kingMidT = [
   [20, 30, 10, 0, 0, 10, 30, 20]
 ];
 
+// eslint-disable-next-line no-unused-vars
 const kingEndT = [
   [-50, -40, -30, -20, -20, -30, -40, -50],
   [-30, -20, -10, 0, 0, -10, -20, -30],
@@ -141,7 +142,9 @@ var minimax = function(depth, game, alpha, beta, isMaximizingPlayer) {
     }
     return bestMove;
   } else {
+    // eslint-disable-next-line no-redeclare
     var bestMove = 9999;
+    // eslint-disable-next-line no-redeclare
     for (var i = 0; i < possibleMoves.length; i++) {
       game.move(possibleMoves[i]);
       bestMove = Math.min(

@@ -10,16 +10,22 @@ block content
   #board.board
   br
   .info
+    span The AI is 
+      span#ai-state waiting on you to move...
+    br
     span Search depth 
     select#search-depth
-        each val in [1,2,3,4,5]
+        each val in [1,2,3,4]
           option= val
-    <br>
-    <span>Positions evaluated: <span id="position-count"></span></span>
-    <br>    
-    <span>Time: <span id="time"></span></span>
-    <br>
-    <span>Positions/s: <span id="positions-per-s"></span> </span>
-    <br>
-    <br>
+    br
+    span Positions evaluated: 
+      span#position-count
+    br    
+    span Time: 
+      span#time
+    br
+    span Positions/s: 
+      span#positions-per-s
+    br
+    br
     #move-history.move-history

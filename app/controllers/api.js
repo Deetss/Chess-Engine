@@ -1,7 +1,7 @@
 /*!
  * Module dependencies.
  */
-var engine = require('../middleware/engine')
+var engine = require('../middleware/engine');
 var Chess = require('chess.js').Chess;
 var games = [];
 
@@ -17,6 +17,6 @@ exports.move = function(req, res) {
   var game = new Chess(req.query.fen);
 
   var results = engine.getBestMove(req.query.depth, game);
-  res.status(200)
+  res.status(200);
   res.json(results);
 };

@@ -9,12 +9,14 @@ window.onload = function() {
               .find(':selected')
               .text()
           );
+        $("#ai-state").text("thinking.....")
         $.get('/api/move?depth='+ depth +'&fen=' + encodeURI(game.fen()), function(data) {
             console.log(data);
             makeBestMove(data.bestMove);
             $("#position-count").text(data.positionCount)
             $("#time").text(data.moveTimeS)
             $("#positions-per-s").text(Math.round(data.positionsPerS))
+            $("#ai-state").text("waiting on you to move...")
         });
       }
   
