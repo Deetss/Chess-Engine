@@ -6,6 +6,7 @@ block page-header
   span Still a work in progress
 
 block content
+  a(href="#")#game-start Start Game
   #board.board
   br
   .info
@@ -17,9 +18,6 @@ block content
     <br>
     <span>Positions evaluated: <span id="position-count"></span></span>
     <br>
-    #connect connect
-    #dc disconnect
-    p#connections connections:
     div(id="state") Disconnected
       
     <span>Time: <span id="time"></span></span>

@@ -9,14 +9,10 @@ module.exports = function(req, res, next) {
 
   res.sseSend = function(data, event = '') {
     if (event !== '') {
-      res.write('event:' + JSON.stringify(event) + '\n');
+      res.write('event: ' + event + '\n');
     }
     res.write('data: ' + JSON.stringify(data) + '\n\n');
     res.flush();
-  };
-
-  res.sseEnd = function() {
-    res.end();
   };
 
   next();

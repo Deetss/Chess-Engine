@@ -6,38 +6,16 @@
  */
 
 const home = require('../app/controllers/home');
+const api = require('../app/controllers/api');
 
 /**
  * Expose
  */
-var connections = [];
 
 module.exports = function(app) {
-  app.get('/stream', function(req, res) {
-    res.sseSetup();
-    connections.push(res);
-    res.sseSend(connections.length);
-  });
-
-  app.get('/connect', function(req, res) {
-    for (var i = 0; i < connections.length; i++) {
-      connections[i].sseSend(connections.length);
-    }
-    res.sendStatus(200);
-  });
-
-  app.get('/disconnect', function(req, res) {
-    for (var i = 0; i < connections.length; i++) {
-      var target =
-        connections[i].req.sessionID == req.sessionID ? connections[i] : null;
-      if (target != null) {
-        var index = connections.indexOf(target);
-        connections.splice(index, 1);
-      }
-      target.sseSend(connections.length, 'disconnect');
-    }
-    res.sendStatus(204);
-  });
+  app.get('/api/stream', api.stream);
+  app.get('/api/move', api.move);
+  //app.get('/api/start', api.start);
 
   app.get('/', home.index);
 
