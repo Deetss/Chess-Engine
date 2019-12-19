@@ -4,55 +4,32 @@ window.onload = function() {
     var source
 
     var apiMove = function (){
-        $.get("/api/move", function(e){
+        var depth = parseInt(
+            $('#search-depth')
+              .find(':selected')
+              .text()
+          );
+        $.get('/api/move?depth='+ depth +'&fen=' + encodeURI(game.fen()), function(data) {
+            console.log(data);
+            makeBestMove(data.bestMove);
+            $("#position-count").text(data.positionCount)
+            $("#time").text(data.moveTimeS)
+            $("#positions-per-s").text(Math.round(data.positionsPerS))
         });
       }
   
     var apiStart = function (){
-        source = new EventSource('/api/stream');
-        attachEventListeners();
+        $.get('/api/start', function(data) {
+            console.log(data);
+            game = new Chess();
+        });
     }
-    
-    var attachEventListeners = function() {
-        source.addEventListener('game', function(e) {
-            console.log("gameStart");
-            game = e.data
-        }, false)
-            
-        source.onmessage = function(e) {
-            //something that the server sends constantly
-            console.log("message")
-        }
-    
-        source.addEventListener('open', function(e) {
-            $("#state").text("Connected")
-        }, false)
-    
-        source.addEventListener('disconnect', function(e) {
-            $("#connections").text("connections:" + connections )
-        }, false)
-    
-        source.addEventListener('error', function(e) {
-            if (e.target.readyState == EventSource.CLOSED) {
-                $("#state").text("Disconnected")
-            }
-            else if (e.target.readyState == EventSource.CONNECTING) {
-                $("#state").text("Connecting...")
-            }
-        }, false)    
-    }
-    
+        
     $("#game-start").on('click', function(){
         apiStart();
         gameStart();
         $("#game-start").hide();
     })
-
-    if (!window.EventSource) {
-        console.log("Your browser doesn't support SSE")
-    }
-
-    
 
     // board visualization and games state handling here
 
@@ -62,9 +39,8 @@ window.onload = function() {
         }
     };
 
-    var makeBestMove = function () {
-        var bestMove = getBestMove(game);
-        game.move(bestMove);
+    var makeBestMove = function (move) {
+        game.move(move);
         board.position(game.fen());
         renderMoveHistory(game.history());
         if (game.game_over()) {
@@ -72,26 +48,6 @@ window.onload = function() {
                 alert('Checkmate')
             }
         }
-    };
-
-    var getBestMove =  function (game) {
-        if (game.game_over()) {
-            alert('Game over');
-        }
-
-        positionCount = 0;
-        var depth = parseInt($('#search-depth').find(':selected').text());
-
-        var d = new Date().getTime();
-        var bestMove = minimaxRoot(depth, game, true);
-        var d2 = new Date().getTime();
-        var moveTime = (d2 - d);
-        var positionsPerS = ( positionCount * 1000 / moveTime);
-
-        $('#position-count').text(positionCount);
-        $('#time').text(moveTime/1000 + 's');
-        $('#positions-per-s').text(positionsPerS);
-        return bestMove;
     };
 
     var renderMoveHistory = function (moves) {
@@ -120,7 +76,7 @@ window.onload = function() {
         }
 
         renderMoveHistory(game.history());
-        window.setTimeout(makeBestMove, 250);
+        window.setTimeout(apiMove, 250);
 
     };
 

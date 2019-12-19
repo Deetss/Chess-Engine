@@ -1,36 +1,22 @@
 /*!
  * Module dependencies.
  */
+var engine = require('../middleware/engine')
 var Chess = require('chess.js').Chess;
-var connections = [];
 var games = [];
 
-exports.stream = function(req, res) {
-  res.sseSetup();
-  connections.push(res);
-
+exports.start = function(req, res) {
   games.push(new Chess());
   games[games.length - 1].id = req.sessionID;
+  games[games.length - 1].fen = games[games.length - 1].fen();
 
-  res.sseSend(games[games.length - 1], 'game');
+  res.json(games[games.length - 1]);
 };
 
 exports.move = function(req, res) {
-  //get board data from request
-  //do calculations
-  //respond with game.fen()
-  //res.sendStatus(200);
-};
+  var game = new Chess(req.query.fen);
 
-//exports.disconnect = function(req, res) {
-//   for (var i = 0; i < connections.length; i++) {
-//     var target =
-//       connections[i].req.sessionID == req.sessionID ? connections[i] : null;
-//     if (target != null) {
-//       var index = connections.indexOf(target);
-//       connections.splice(index, 1);
-//     }
-//     target.sseSend(connections.length, 'disconnect');
-//   }
-//   res.sendStatus(204);
-// }
+  var results = engine.getBestMove(req.query.depth, game);
+  res.status(200)
+  res.json(results);
+};

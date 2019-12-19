@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "author": {
     "name": "Deetss",
-    "email": "dylan.deetss@gmial.com"
+    "email": "dylan.deetss@gmail.com"
   },
   "engines": {
     "node": ">=10.x"
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "body-parser": "~1.19.0",
-    "chess.js": "^0.10.2",
+    "chess.js": "git@github.com:jhlywa/chess.js.git#master",
     "co": "~4.6.0",
     "compression": "~1.7.4",
     "connect-flash": "~0.1.1",

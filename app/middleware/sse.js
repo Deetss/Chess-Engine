@@ -8,11 +8,10 @@ module.exports = function(req, res, next) {
   };
 
   res.sseSend = function(data, event = '') {
-    if (event !== '') {
-      res.write('event: ' + event + '\n');
-    }
-    res.write('data: ' + JSON.stringify(data) + '\n\n');
+    res.write('event:' + event + '\n');
+    res.write('data:' + JSON.stringify(data) + '\n\n');
     res.flush();
+    console.log(res.data)
   };
 
   next();

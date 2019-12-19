@@ -75,7 +75,29 @@ const kingEndT = [
   [-50, -30, -30, -30, -30, -30, -30, -50]
 ];
 
+var positionCount;
+
 // AI starts here
+
+exports.getBestMove = function(depth, game) {
+  var results;
+  if (game.game_over()) {
+    return 'Game Over';
+  }
+
+  positionCount = 0;
+
+  var d = new Date().getTime();
+  var bestMove = minimaxRoot(depth, game, true);
+  var d2 = new Date().getTime();
+  var moveTime = d2 - d;
+  var positionsPerS = (positionCount * 1000) / moveTime;
+  var moveTimeS = moveTime / 1000;
+
+  results = { bestMove, positionCount, moveTimeS, positionsPerS };
+  return results;
+};
+
 var minimaxRoot = function(depth, game, isMaximizingPlayer) {
   var possibleMoves = game.moves();
   var bestMoveFound;
@@ -143,7 +165,7 @@ var evaluateBoard = function(board) {
       totalEvaluation =
         totalEvaluation +
         getPieceValue(board[i][j]) +
-        getPositionBias(board[i][j], i, j);
+        2 * getPositionBias(board[i][j], i, j);
     }
   }
   return totalEvaluation;

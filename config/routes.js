@@ -13,7 +13,7 @@ const api = require('../app/controllers/api');
  */
 
 module.exports = function(app) {
-  app.get('/api/stream', api.stream);
+  app.get('/api/start', api.start);
   app.get('/api/move', api.move);
   //app.get('/api/start', api.start);
 
